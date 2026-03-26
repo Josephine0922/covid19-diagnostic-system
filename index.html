@@ -90,20 +90,35 @@ label{
 /* SYMPTOMS */
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:10px;
+  grid-template-columns:repeat(3, 1fr);
+  gap:12px;
   margin-top:10px;
 }
 
+
 .symptom{
   background:#f7fbff;
-  padding:10px;
+  padding:10px 14px;
   border-radius:30px;
   display:flex;
-  gap:8px;
   align-items:center;
+  gap:10px;
   cursor:pointer;
+  font-size:14px;
+  line-height:1.2;
+  min-height:48px; /* keeps all boxes same height */
 }
+
+.symptom span{
+  flex:1;
+}
+
+
+.symptom input{
+  width:auto;
+  margin:0;
+}
+
 
 .symptom:hover{
   background:#e6f3fa;
@@ -126,6 +141,10 @@ label{
   margin-bottom:10px;
 }
 
+.result b {
+  color:#0b2b3b;
+}
+
 /* BUTTON */
 button{
   width:100%;
@@ -144,13 +163,40 @@ button:hover{
 
 /* MOBILE */
 @media(max-width:768px){
-  .main{flex-direction:column;}
-  .left{border-right:none;border-bottom:1px solid #eee;}
+  .main{
+    flex-direction:column;
+  }
+
+  .left{
+    border-right:none;
+    border-bottom:1px solid #eee;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2, 1fr); /* 2 per row on tablet */
+  }
 }
+
+@media(max-width:480px){
+  .grid{
+    grid-template-columns:1fr; /* 1 per row on small phones */
+  }
+
+  .title{
+    font-size:20px;
+    animation:none; /* stops overflow scrolling on small screens */
+  }
+}
+
 </style>
 </head>
 
 <body>
+  <label class="symptom">
+  <input type="checkbox" value="fever">
+  <span>Fever</span>
+  </label>
+
 
 <div class="container">
 
@@ -181,7 +227,11 @@ button:hover{
     <div class="right">
       <h3>Select Symptoms</h3>
 
-      <div class="grid">
+        <div class="grid"><label class="symptom"><input type="checkbox" value="High fever"> (high fever + sweating)</label>
+        <label class="symptom"><input type="checkbox" value="allergy"> Sneezing / Allergies</label>
+        <label class="symptom"><input type="checkbox" value="cold"> Runny nose</label>
+        <label class="symptom"><input type="checkbox" value="Stomach pain"> Stomach pain </label>
+
         <label class="symptom"><input type="checkbox" value="fever"> Fever</label>
         <label class="symptom"><input type="checkbox" value="cough"> Dry cough</label>
         <label class="symptom"><input type="checkbox" value="fatigue"> Fatigue</label>
@@ -212,39 +262,41 @@ function diagnose(){
   const age=parseInt(document.getElementById("age").value)||30;
   const name=document.getElementById("name").value||"Patient";
 
-  let stage="",color="",advice="";
+  let stage="",color="",advice="",covidMessage="";
+
+  // Define COVID-related symptoms
+  const covidSymptoms = ["fever","cough","fatigue","loss","sob","chest","aches","throat","headache"];
+
+  // Define NON-COVID symptoms
+  const nonCovidSymptoms = ["High fever","allergy","cold","Stomach pain"];
+
+  const hasCovid = symptoms.some(s => covidSymptoms.includes(s));
+  const onlyNonCovid = symptoms.every(s => nonCovidSymptoms.includes(s));
 
   if(symptoms.length===0){
     stage="No Symptoms";
     color="gray";
-    advice="No COVID symptoms detected.";
-  }
-  else if(symptoms.includes("chest")){
-    stage="CRITICAL";
-    color="red";
-    advice="Emergency! Go to hospital immediately.";
-  }
-  else if(symptoms.includes("sob")){
-    stage="SEVERE";
-    color="red";
-    advice="Seek urgent medical care.";
-  }
-  else if(symptoms.length>=4){
-    stage="MODERATE";
-    color="orange";
-    advice="Consult a doctor. Take paracetamol, rest, hydrate.";
-  }
-  else{
-    stage="MILD";
-    color="#2c7da0";
-    advice="Isolate, rest, take fluids and paracetamol.";
+    advice="No illness detected.";
   }
 
-  let covidMessage = "";
+  else if(onlyNonCovid){
+    stage="NEGATIVE";
+    color="green";
+    covidMessage=`
+    <div style="
+      background:#e6fffa;
+      color:#065f46;
+      padding:8px 12px;
+      border-radius:20px;
+      font-weight:600;
+      margin-bottom:10px;">
+      ✅ You are COVID-19 NEGATIVE
+    </div>`;
+    advice="Visit a clinic for proper diagnosis.";
+  }
 
-// show only if symptoms exist
-if(symptoms.length > 0){
-  covidMessage = `
+  else if(hasCovid){
+  covidMessage=`
   <div style="
     background:#ffe5e5;
     color:#b91c1c;
@@ -254,15 +306,67 @@ if(symptoms.length > 0){
     margin-bottom:10px;">
     ⚠️ You are COVID-19 POSITIVE
   </div>`;
+
+  if(symptoms.includes("chest")){
+    stage="CRITICAL";
+    color="red";
+    advice=`
+    🚑 <strong>Emergency Care Needed</strong><br>
+    - Go to the hospital immediately<br>
+    - Oxygen support may be required<br>
+    - Doctor may prescribe antiviral drugs
+    `;
+  }
+
+  else if(symptoms.includes("sob")){
+    stage="SEVERE";
+    color="red";
+    advice=`
+    ⚠️ <strong>Severe Case</strong><br>
+    Recommended:<br>
+    - <b>Paracetamol</b> for fever<br>
+    - <b>Vitamin C & Zinc</b><br>
+    - Plenty of fluids<br>
+    - Seek urgent medical attention
+    `;
+  }
+
+  else if(symptoms.length>=4){
+    stage="MODERATE";
+    color="orange";
+    advice=`
+    💊 <strong>Moderate Case Treatment</strong><br>
+    - Paracetamol (for fever & pain)<br>
+    - Vitamin C + Zinc supplements<br>
+    - Warm fluids (tea, water)<br>
+    - Rest and isolate<br>
+    - Monitor breathing
+    `;
+  }
+
+  else{
+    stage="MILD";
+    color="#2c7da0";
+    advice=`
+    🏠 <strong>Mild Case Treatment</strong><br>
+    - Paracetamol if needed<br>
+    - Vitamin C<br>
+    - Drink plenty of water<br>
+    - Rest well<br>
+    - Self-isolate for a few days
+    `;
+  }
 }
 
-document.getElementById("result").innerHTML=`
-  ${covidMessage}
-  <div class="badge" style="background:${color}">${stage}</div>
-  <p><strong>${name}</strong> (${age} yrs)</p>
-  <p>${advice}</p>
-`;
+
+  document.getElementById("result").innerHTML=`
+    ${covidMessage}
+    <div class="badge" style="background:${color}">${stage}</div>
+    <p><strong>${name}</strong> (${age} yrs)</p>
+    <p>${advice}</p>
+  `;
 }
+
 </script>
 
 </body>

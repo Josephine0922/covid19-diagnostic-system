@@ -256,7 +256,7 @@ button:hover{
 <script>
 function diagnose(){
   const symptoms=[...document.querySelectorAll("input[type=checkbox]:checked")].map(el=>el.value);
-  const age=parseInt(document.getElementById("age").value)||30;
+  const age=parseInt(document.getElementById("age").value)||"";
   const name=document.getElementById("name").value||"Patient";
 
   let stage="",color="",advice="",covidMessage="";
@@ -287,9 +287,9 @@ function diagnose(){
       border-radius:20px;
       font-weight:600;
       margin-bottom:10px;">
-      ✅ You are COVID-19 NEGATIVE
+      ✅ Your COVID-19 result is NEGATIVE
     </div>`;
-    advice="Visit a clinic for proper diagnosis.";
+    
   }
 
   else if(hasCovid){
@@ -301,7 +301,7 @@ function diagnose(){
     border-radius:20px;
     font-weight:600;
     margin-bottom:10px;">
-    ⚠️ You are COVID-19 POSITIVE
+    ⚠️ Your COVID-19 result is POSITIVE
   </div>`;
 
   if(symptoms.includes("chest")){

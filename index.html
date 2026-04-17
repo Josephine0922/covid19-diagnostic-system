@@ -242,6 +242,10 @@ button:hover{
       </div>
 
       <button onclick="diagnose()">Analyze</button>
+      <button onclick="printResult()" style="margin-top:10px;background:#444;">
+      🖨️ Print Result
+      </button>
+
 
       <div class="result" id="result">
         <p>Diagnosis will appear here...</p>
@@ -260,6 +264,22 @@ function diagnose(){
   const name=document.getElementById("name").value||"Patient";
 
   let stage="",color="",advice="",covidMessage="";
+  const weakSymptoms = ["headache","fatigue","aches","throat","allergy","cold","nausea","Stomach pain"];
+  // 🚨 Block weak symptoms if only one is selected
+if(symptoms.length === 1 && weakSymptoms.includes(symptoms[0])){
+  document.getElementById("result").innerHTML = `
+    <div style="
+      background:#fff4e5;
+      color:#9a6700;
+      padding:10px 14px;
+      border-radius:12px;
+      font-weight:600;">
+      ⚠️ Dear ${name}, the selected symptom alone may be caused by stress, dehydration, or minor illness.<br>
+      Please select additional symptoms for accurate COVID-19 screening.
+    </div>
+  `;
+  return;
+}
 
   // Define COVID-related symptoms
   const covidSymptoms = ["fever","cough","fatigue","loss","sob","chest","aches","throat","headache"];
@@ -362,6 +382,36 @@ function diagnose(){
     <p><strong>${name}</strong> (${age} yrs)</p>
     <p>${advice}</p>
   `;
+}
+function printResult(){
+  const content = document.getElementById("result").innerHTML;
+
+  const printWindow = window.open('', '', 'width=800,height=600');
+
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>COVID-19 Diagnosis Result</title>
+      <style>
+        body{font-family:Arial;padding:20px;}
+        .badge{
+          padding:6px 12px;
+          border-radius:20px;
+          color:white;
+          display:inline-block;
+          margin-bottom:10px;
+        }
+      </style>
+    </head>
+    <body>
+      <h2>COVID-19 Diagnostic Result</h2>
+      ${content}
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+  printWindow.print();
 }
 
 </script>

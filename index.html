@@ -225,7 +225,7 @@ button:hover{
     <div class="right">
       <h3>Select Symptoms</h3>
 
-        <div class="grid"><label class="symptom"><input type="checkbox" value="High fever"> (high fever + sweating)</label>
+        <div class="grid"><label class="symptom"><input type="checkbox" value="high_fever"> High fever + sweating</label>
         <label class="symptom"><input type="checkbox" value="allergy"> Sneezing / Allergies</label>
         <label class="symptom"><input type="checkbox" value="cold"> Runny nose</label>
         <label class="symptom"><input type="checkbox" value="Stomach pain"> Stomach pain </label>
@@ -264,7 +264,7 @@ function diagnose(){
   const name=document.getElementById("name").value||"Patient";
 
   let stage="",color="",advice="",covidMessage="";
-  const weakSymptoms = ["headache","fatigue","aches","throat","allergy","cold","nausea","Stomach pain"];
+  const weakSymptoms = ["headache","fever","fatigue","aches","throat","allergy","cold","nausea","Stomach pain"];
   // 🚨 Block weak symptoms if only one is selected
 if(symptoms.length === 1 && weakSymptoms.includes(symptoms[0])){
   document.getElementById("result").innerHTML = `
@@ -282,10 +282,10 @@ if(symptoms.length === 1 && weakSymptoms.includes(symptoms[0])){
 }
 
   // Define COVID-related symptoms
-  const covidSymptoms = ["fever","cough","fatigue","loss","sob","chest","aches","throat","headache"];
+  const covidSymptoms = ["high_fever","nausea","fever","cough","fatigue","loss","sob","chest","aches","throat"];
 
   // Define NON-COVID symptoms
-  const nonCovidSymptoms = ["High fever","allergy","cold","Stomach pain"];
+  const nonCovidSymptoms = ["allergy","cold","Stomach pain"];
 
   const hasCovid = symptoms.some(s => covidSymptoms.includes(s));
   const onlyNonCovid = symptoms.every(s => nonCovidSymptoms.includes(s));

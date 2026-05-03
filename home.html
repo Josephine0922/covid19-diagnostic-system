@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart COVID-19 Assistant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  margin:0;
+  color:#fff;
+}
+
+/* PAGES */
+.page{
+  display:none;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+}
+
+.active{
+  display:flex;
+}
+
+/* CARD */
+.card{
+  background:#fff;
+  color:#333;
+  padding:30px;
+  border-radius:20px;
+  width:90%;
+  max-width:400px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
+  animation:fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(30px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border-radius:10px;
+  border:1px solid #ccc;
+}
+
+button{
+  width:100%;
+  padding:12px;
+  border:none;
+  border-radius:30px;
+  background:#2c7da0;
+  color:white;
+  font-weight:600;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#1f5e7a;
+}
+
+/* CHAT UI */
+.chat-container{
+  width:100%;
+  max-width:600px;
+  height:90vh;
+  background:#fff;
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+}
+
+.chat-header{
+  background:#2c7da0;
+  padding:15px;
+  font-weight:600;
+}
+
+.chat-body{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
+  background:#eef3f9;
+}
+
+.message{
+  margin:10px 0;
+  max-width:70%;
+  padding:10px 15px;
+  border-radius:15px;
+}
+
+.bot{
+  background:#ddd;
+  align-self:flex-start;
+}
+
+.user{
+  background:#2c7da0;
+  color:white;
+  align-self:flex-end;
+}
+
+.chat-input{
+  display:flex;
+  border-top:1px solid #ccc;
+}
+
+.chat-input input{
+  flex:1;
+  border:none;
+  padding:15px;
+}
+
+.chat-input button{
+  width:100px;
+  border-radius:0;
+}
+.proceed-btn{
+  margin-top:15px;
+  background:linear-gradient(135deg,#2c7da0,#1f5e7a);
+  font-size:16px;
+  letter-spacing:0.5px;
+  transition:0.3s;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+}
+
+.proceed-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 25px rgba(0,0,0,0.3);
+}
+body{
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  height:100vh;
+}
+
+.app{
+  height:100%;
+}
+
+/* PAGE */
+.page{
+  display:none;
+  height:100%;
+  justify-content:center;
+  align-items:center;
+  animation:fadeIn 0.5s ease;
+}
+
+.page.active{
+  display:flex;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+.chat-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.back-btn{
+  cursor:pointer;
+  font-size:20px;
+  font-weight:bold;
+  padding:5px 10px;
+  border-radius:8px;
+  transition:0.3s;
+}
+
+.back-btn:hover{
+  background:rgba(255,255,255,0.2);
+}
+
+
+/* GLASS CARD */
+.glass-card{
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(15px);
+  padding:30px;
+  border-radius:20px;
+  width:90%;
+  max-width:400px;
+  color:white;
+  box-shadow:0 10px 40px rgba(0,0,0,0.3);
+}
+
+.glass-card h2{
+  margin-bottom:5px;
+}
+
+.subtitle{
+  font-size:13px;
+  opacity:0.8;
+  margin-bottom:20px;
+}
+
+/* INPUTS */
+input,select{
+  width:100%;
+  padding:12px;
+  margin:10px 0;
+  border:none;
+  border-radius:10px;
+  outline:none;
+}
+
+/* BUTTON */
+.primary-btn{
+  margin-top:15px;
+  background:#2c7da0;
+  color:white;
+  border:none;
+  padding:12px;
+  border-radius:30px;
+  width:100%;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.primary-btn:hover{
+  transform:translateY(-2px);
+  background:#1f5e7a;
+}
+
+/* CHAT */
+.chat-card{
+  width:95%;
+  max-width:600px;
+  height:90vh;
+  background:white;
+  border-radius:20px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+
+.chat-header{
+  background:#2c7da0;
+  color:white;
+  padding:15px;
+  font-weight:600;
+}
+
+.chat-body{
+  flex:1;
+  padding:15px;
+  overflow-y:auto;
+  background:#eef3f9;
+}
+
+.message{
+  margin:10px 0;
+  padding:10px 15px;
+  border-radius:15px;
+  max-width:70%;
+  animation:fadeIn 0.3s ease;
+}
+
+.user{
+  background:#2c7da0;
+  color:white;
+  align-self:flex-end;
+}
+
+.bot{
+  background:#e0e0e0;
+}
+
+/* INPUT AREA */
+.chat-input{
+  display:flex;
+  border-top:1px solid #ddd;
+}
+
+.chat-input input{
+  flex:1;
+  border:none;
+  padding:15px;
+}
+
+.chat-input button{
+  width:70px;
+  border:none;
+  background:#2c7da0;
+  color:white;
+  font-size:18px;
+}
+/* TYPING INDICATOR */
+.typing{
+  display:flex;
+  gap:5px;
+  padding:10px 15px;
+  background:#e0e0e0;
+  border-radius:15px;
+  width:60px;
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  background:#555;
+  border-radius:50%;
+  animation:blink 1.4s infinite;
+}
+
+.dot:nth-child(2){ animation-delay:0.2s; }
+.dot:nth-child(3){ animation-delay:0.4s; }
+
+@keyframes blink{
+  0%, 80%, 100%{opacity:0;}
+  40%{opacity:1;}
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- PAGE 1 -->
+  <div class="page active" id="page1">
+    <div class="glass-card">
+      <h2>🩺 Patient Information</h2>
+      <p class="subtitle">Enter your details to begin diagnosis</p>
+
+      <input id="name" placeholder="Full Name">
+      <input id="age" type="number" placeholder="Age">
+
+      <select id="sex">
+        <option>Male</option>
+        <option>Female</option>
+      </select>
+
+      <label>Contact with COVID-19?</label>
+      <select id="contact">
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+        <option value="unknown">I don't know</option>
+      </select>
+
+      <button class="primary-btn" onclick="goToChat()">
+        Start Diagnosis →
+      </button>
+    </div>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page" id="page2">
+    <div class="chat-card">
+
+     <div class="chat-header">
+  <span class="back-btn" onclick="goBack()">←</span>
+  🦠 Smart COVID 19 Diagnostic System
+    </div>
+
+
+      <div class="chat-body" id="chatBody"></div>
+
+      <div class="chat-input">
+        <input id="chatInput" placeholder="Describe your symptoms...">
+        <button onclick="sendMessage()">➤</button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+</body>
+
+
+<script>
+
+let userData = {};
+let conversation = [];
+
+/* NAVIGATION */
+function goToChat(){
+
+  const name = document.getElementById("name").value.trim();
+  const age = document.getElementById("age").value;
+
+  if(!name || !age){
+    alert("Please fill all required fields.");
+    return;
+  }
+
+  userData.name = name;
+  userData.age = age;
+  userData.contact = document.getElementById("contact").value;
+
+  document.getElementById("page1").classList.remove("active");
+  document.getElementById("page2").classList.add("active");
+
+  botMessage(`Hello ${name} 👋\n\nDescribe your symptoms so I can assist.`);
+}
+
+
+/* CHAT SYSTEM */
+function sendMessage(){
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  addMessage(text,"user");
+  input.value = "";
+
+  showTyping();
+
+  setTimeout(()=>{
+    removeTyping();
+    processDiagnosis(text);
+  }, 1800); // delay = realistic thinking time
+}
+
+
+function addMessage(text,type){
+  const msg = document.createElement("div");
+  msg.className = "message " + type;
+  msg.innerText = text;
+
+  document.getElementById("chatBody").appendChild(msg);
+  document.getElementById("chatBody").scrollTop = 9999;
+}
+
+function botMessage(text){
+
+  showTyping();
+
+  setTimeout(()=>{
+    removeTyping();
+
+    const msg = document.createElement("div");
+    msg.className = "message bot";
+
+    msg.innerText = text;
+
+    document.getElementById("chatBody").appendChild(msg);
+    scrollChat();
+
+  }, 1200);
+}
+
+
+function processDiagnosis(text){
+botMessage("🧠 Analyzing your symptoms...");
+
+  const t = text.toLowerCase();
+  let score = 0;
+
+  if(t.includes("fever")) score += 2;
+  if(t.includes("cough")) score += 2;
+  if(t.includes("fatigue")) score += 1;
+  if(t.includes("loss")) score += 3;
+  if(t.includes("breath")) score += 4;
+  if(t.includes("chest")) score += 5;
+
+  if(userData.contact === "yes") score += 3;
+  if(userData.contact === "unknown") score += 1;
+
+  let result = "";
+  let advice = "";
+
+  /* 🧠 REAL-LIFE ADVICE SYSTEM */
+
+  if(score === 0){
+    result = "No strong COVID-19 indicators";
+    advice = `
+• Likely minor illness (cold, stress, or fatigue)
+• Stay hydrated
+• Rest well
+• Monitor symptoms for 48 hours
+• If symptoms worsen, test for COVID-19
+`;
+  }
+
+  else if(score <= 3){
+    result = "Mild symptoms";
+    advice = `
+• Self-isolate at home
+• Take Paracetamol for fever
+• Drink warm fluids
+• Take Vitamin C & Zinc
+• Avoid contact with others
+• Get tested if symptoms persist beyond 2–3 days
+`;
+  }
+
+  else if(score <= 6){
+    result = "Moderate risk";
+    advice = `
+• STRICT self-isolation
+• COVID-19 test strongly recommended
+• Monitor oxygen level if possible
+• Take Paracetamol + fluids
+• Eat well and rest
+• Contact a healthcare provider if symptoms worsen
+`;
+  }
+
+  else if(score <= 9){
+    result = "High risk";
+    advice = `
+• Seek medical attention immediately
+• COVID test required
+• Watch for breathing difficulty
+• Avoid self-medication beyond basic drugs
+• Inform close contacts
+`;
+  }
+
+  else{
+    result = "Critical condition";
+    advice = `
+🚑 EMERGENCY:
+• Go to hospital immediately
+• Possible oxygen support needed
+• Do NOT delay treatment
+• Inform emergency services if breathing is difficult
+`;
+  }
+
+  /* Save for PDF */
+  lastResult = {
+    name: userData.name,
+    age: userData.age,
+    contact: userData.contact,
+    symptoms: text,
+    score: score,
+    result: result,
+    advice: advice
+  };
+
+  botMessage(`🧠 Analysis Complete
+
+Risk Level: ${result}
+
+Advice:
+${advice}
+
+👉 You can download your report below.`);
+  
+  showDownloadButton();
+}
+function showTyping(){
+  const typing = document.createElement("div");
+  typing.className = "message bot typing";
+  typing.id = "typing";
+
+  typing.innerHTML = `
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  `;
+
+  document.getElementById("chatBody").appendChild(typing);
+  scrollChat();
+}
+
+function removeTyping(){
+  const typing = document.getElementById("typing");
+  if(typing) typing.remove();
+}
+
+function scrollChat(){
+  const chat = document.getElementById("chatBody");
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function showDownloadButton(){
+  const btn = document.createElement("button");
+  btn.innerText = "⬇️ Download Report (PDF)";
+  btn.style.marginTop = "10px";
+
+  btn.onclick = downloadPDF;
+
+  document.getElementById("chatBody").appendChild(btn);
+}
+function downloadPDF(){
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFont("Helvetica");
+
+  doc.text("COVID-19 Diagnostic Report", 20, 20);
+
+  doc.text(`Name: ${lastResult.name}`, 20, 40);
+  doc.text(`Age: ${lastResult.age}`, 20, 50);
+  doc.text(`Contact History: ${lastResult.contact}`, 20, 60);
+
+  doc.text("Symptoms:", 20, 80);
+  doc.text(lastResult.symptoms, 20, 90);
+
+  doc.text(`Risk Level: ${lastResult.result}`, 20, 110);
+
+  doc.text("Advice:", 20, 130);
+
+  const splitAdvice = doc.splitTextToSize(lastResult.advice, 160);
+  doc.text(splitAdvice, 20, 140);
+
+  doc.save("COVID19_Report.pdf");
+}
+function goBack(){
+
+  document.getElementById("page2").classList.remove("active");
+  document.getElementById("page1").classList.add("active");
+
+  /* OPTIONAL: clear chat */
+  document.getElementById("chatBody").innerHTML = "";
+
+}
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+</body>
+</html>
